@@ -1,0 +1,84 @@
+
+body {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: black;
+    background-color: whitesmoke;
+}
+
+.wrapper {
+    border: 2px solid black;
+    width: 80%;
+    padding: 20px;
+    margin: auto;
+}
+
+header {
+    text-align: center;
+    background-color: lightgrey;
+    padding: 1em;
+}
+
+article {
+    font-size: 0.9em;
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+.header2 img{
+    display: none;
+    width: 40%;
+    height: 40%;
+    padding-top: 1em;
+    margin:auto;
+}
+
+#leerProductos {
+    background-color: #555555;
+    color: white;
+    font-weight: bold;
+    padding: 0.4em;
+} 
+
+.header3, .lista {
+    display: flex;
+    background-color: lightgrey;
+    padding: 1em;
+    font-size: 0.8em;
+    text-align: left;
+}
+
+.item1 {
+    font-weight: bold;
+    width: 12.5%;
+}
+
+.item2 {
+    font-weight: bold;
+    width: 25%;
+}
+
+.lista div {
+    border: 2px solid lightgrey;
+    font-weight: bold;
+    width: 12.5%;
+    padding: 0.5em;
+    background-color: whitesmoke !important;
+}
+
+.header4 .desc {
+    font-weight: bold;
+    width: 25%;
+}
+
+.header4 img{
+    width: 40px;
+    height: 40px;
+    margin:auto;
+}
+
+footer{
+    background-color: lightgrey;
+    text-align: center;
+    font-size: 0.7em;
+    padding-bottom: 2em;
+}

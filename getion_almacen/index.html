@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DWC</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="interfaz.css">
+    <script type="text/javascript" src="funciones.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <h1 id="enviar">GESTIÓN ALMACÉN</h1>
+        </header>
+        <article class="header2">
+            <br /><br />
+            Familia seleccionada <input type="text" id="familiaSeleccionada" />
+            <select id="listaFamilias" onclick="select()">
+                <option value="*">Todos los Productos</option>
+            </select>
+            <img src="" id="imagenFamilia" alt="Imagen Familia">
+            <br /><br />
+            <input type="button" id="leerProductos" value="Leer Productos Almacén Por Familia" onclick="cargaasinc()" />
+        </article>
+        <article class="header3 contenedor">
+            <div class="item1">idProducto</div>
+            <div class="item2">Descripción</div>
+            <div class="item1">Precio Coste</div>
+            <div class="item1">Precio Venta</div>
+            <div class="item1">Stock</div>
+            <div class="item1">Stock Mínimo</div>
+            <div class="item1">Imagen</div>
+        </article>
+        <article id="listaArticulos" class="header4">
+
+        </article>
+
+        <footer class="footer">
+            <hr /><br />
+            Desarrollo de Aplicaciones Web en Entorno Cliente(<cite>DAW</cite>) &copy; 2020-2021
+        </footer>
+    </div>
+</body>
+
+</html>
