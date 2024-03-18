@@ -4,7 +4,7 @@ class conexion
 {
     public $conect;
     public function __construct() {
-         $dsn = "mysql:host=localhost;dbname=bikes";
+         $dsn = "mysql:host=localhost;dbname=almacen";
          $usuario = "root";
          $contrasena = "";
          $dsn_Options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
@@ -16,14 +16,6 @@ class conexion
         }
     }
 
-    public function convertir(){
-        $stm = $this->conect->query('SELECT * FROM almacen');
-        $resultado = $stm->fetchAll(PDO::FETCH_ASSOC);
-
-        $json = json_encode($resultado);
-
-        return $json;
-    }
 }
 
 $cb = new conexion();
