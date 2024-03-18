@@ -14,15 +14,37 @@ la tabla familia de la base de datos. */
 function cargaasinc() {
    $("#leerProductos").click(function () {
       $.ajax({
-         url:"consulta.php",
-         type:"POST",
-         dataType:"json",
-         succes:function(data){
+         url: "consulta.php",
+         type: "POST",
+         dataType: "json",
+         succes: function (data) {
             console.log(data);
          }
       });
    });
 
+}
+
+function iniciar() {
+
+   miXHR = new objetoXHR();
+   cargarAsync("consulta.php");
+   
+}
+
+function cargarAsync(url) {
+   if (miXHR) {
+      document.getElementById("indicador").innerHTML = "<i mg src='ajax-loader.gif'/>";
+      miXHR.open('GET', url, true);
+      miXHR.onreadystatechange = estadoPeticion;
+      miXHR.send(null);
+   }
+}
+function estadoPeticion() {
+   if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("indicador").innerHTML = "";
+      textoDIV(document.getElementById("resultados"), this.responseText);
+   }
 }
 
 /* Con los datos obtenidos en formato JSON añadir a la etiqueta

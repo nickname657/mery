@@ -10,7 +10,6 @@ class conexion
          $dsn_Options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
          try {
             $this->conect = new PDO($dsn, $usuario, $contrasena, $dsn_Options);
-            echo "Conexión exitosa a la base de datos";
         } catch (PDOException $e) {
             echo "Error de conexión: " . $e->getMessage();
         }
