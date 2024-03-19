@@ -1,51 +1,64 @@
-﻿$(document).ready(showCatalog)
+﻿/* Programar una función desde la que se ejecuten los procesos necesarios
+después de cargar la página html en memoria. */
+$(document).ready(function () {
+   initEvent();
+});
 
 
 function initEvent() {
-   $('#enviark').click(showCatalog)
+   $('#leerProductos').click(iniciar)
 }
-/* Programar una función desde la que se ejecuten los procesos necesarios
-después de cargar la página html en memoria. */
-
 
 /* Crear una función en la cual una conexión asíncrona obtenga los datos de 
 la tabla familia de la base de datos. */
 
-function cargaasinc() {
-   $("#leerProductos").click(function () {
-      $.ajax({
-         url: "consulta.php",
-         type: "POST",
-         dataType: "json",
-         succes: function (data) {
-            console.log(data);
-         }
-      });
-   });
-
-}
 
 function iniciar() {
 
    miXHR = new objetoXHR();
-   cargarAsync("consulta.php");
-   
+   cargarAsync("nombre=Laura&apellidos=Folgado");
 }
+
 
 function cargarAsync(url) {
    if (miXHR) {
-      document.getElementById("indicador").innerHTML = "<i mg src='ajax-loader.gif'/>";
-      miXHR.open('GET', url, true);
-      miXHR.onreadystatechange = estadoPeticion;
-      miXHR.send(null);
+       miXHR.open('POST', "consulta.php", true);
+       miXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+       miXHR.onreadystatechange = estadoPeticion;
+       var datos = "nombre";
+       miXHR.send(datos);
    }
 }
+
+
 function estadoPeticion() {
    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("indicador").innerHTML = "";
-      textoDIV(document.getElementById("resultados"), this.responseText);
+       try {
+           var resultados = JSON.parse(this.responseText);           
+           console.log(resultados);
+           
+       } catch (error) {
+           console.error("Error:", error.message);
+       }
    }
 }
+
+
+function objetoXHR() {
+   if (window.XMLHttpRequest) {
+      return new XMLHttpRequest();
+   } else if (window.ActiveXObject) {
+      var versionesIE = new Array('Msxml2.XMLHTTP.5.0', 'Msxml2.XMLHTTP.4.0',
+         'Msxml2.XMLHTTP.3.0', 'Msxml2.XMLHTTP', 'Microsoft.XMLHTTP');
+      for (var i = 0; i < versionesIE.length; i++) {
+         try {
+            return new ActiveXObject(versionesIE[i]);
+         } catch (errorControlado) { } //Capturamos el error,
+      }
+   }
+   throw new Error("No se pudo crear el objeto XMLHttpRequest");
+}
+
 
 /* Con los datos obtenidos en formato JSON añadir a la etiqueta
 <select id="listaFamilias"> tantas <option> como registros tenga la tabla familias.
