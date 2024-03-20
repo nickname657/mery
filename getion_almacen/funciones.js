@@ -14,8 +14,8 @@ function initEvent() {
    $('#listaFamilias').click(options(datosJson))
    $('#listaFamilias').change(function () {
       var opcionSeleccionada = $(this).val();
-      console.log(opcionSeleccionada);
-      filtroEtiqueta(opcionSeleccionada);
+      console.log("?????" + opcionSeleccionada);
+      changeSelect(opcionSeleccionada, datosJson);
    });
 }
 
@@ -69,14 +69,13 @@ function objetoXHR() {
 Cada <option> guarda el id de la familia, el nombre y la foto. */
 
 function options(datos) {
-   console.log(datos);
    $('#listaFamilias').empty(); 
 
    $.each(datos, function (index, obj) {
       
          var nuevoOption = $('<option>', {
             id: obj.id,
-            value: obj.foto,
+            value: obj.nombre,
             text: obj.nombre
       });
       $('#listaFamilias').append(nuevoOption);
@@ -90,9 +89,27 @@ que visualice en la etiqueta <input type="text" id="familiaSeleccionada" />
 el nombre de la familia y la etiqueta <img src="" id="imagenFamilia" alt="Imagen Familia" />
 la imagen, foto, de la familia seleccionada. */
 
-function changeSelect(){
+function changeSelect(option , json){
+
+   console.log("que es esoooo: " + option);
+   $('#listaFamilias').empty(); 
 
 
+   var lg = json.length;
+   for (let b = 0; b < lg; b++) {
+      var tag = String(json[b].nombre);
+      if (option === tag) {
+         $('#familiaSeleccionada').val(json[b].nombre);
+      } else if (option === "null") {
+         $('#familiaSeleccionada').empty();
+      }
+   }
+
+  
+   $.each(json, function (index, o) {
+      
+      $('#familiaSeleccionada').append(o.nombre);
+   });
 
 }
 
