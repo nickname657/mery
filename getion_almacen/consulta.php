@@ -16,5 +16,5 @@
         $lista[] = $value;
     }
 
-    echo json_encode($lista);
+    echo (json_encode($lista));
 ?>

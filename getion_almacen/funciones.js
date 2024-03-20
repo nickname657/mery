@@ -1,4 +1,7 @@
-﻿/* Programar una función desde la que se ejecuten los procesos necesarios
+﻿
+let datosJson;
+
+/* Programar una función desde la que se ejecuten los procesos necesarios
 después de cargar la página html en memoria. */
 $(document).ready(function () {
    initEvent();
@@ -6,19 +9,19 @@ $(document).ready(function () {
 
 
 function initEvent() {
-   iniciar();
-   $('#leerProductos').click(options)
+   miXHR = new objetoXHR();
+   cargarAsync("consulta.php");
+   $('#listaFamilias').click(options(datosJson))
+   $('#listaFamilias').change(function () {
+      var opcionSeleccionada = $(this).val();
+      console.log(opcionSeleccionada);
+      filtroEtiqueta(opcionSeleccionada);
+   });
 }
 
 /* Crear una función en la cual una conexión asíncrona obtenga los datos de 
 la tabla familia de la base de datos. */
 
-
-function iniciar() {
-
-   miXHR = new objetoXHR();
-   cargarAsync("consulta.php");
-}
 
 
 function cargarAsync(url) {
@@ -34,14 +37,13 @@ function cargarAsync(url) {
 function estadoPeticion() {
    if (this.readyState == 4 && this.status == 200) {
        try {
-           var resultados = JSON.parse(this.responseText);           
-           console.log(resultados);
-           
+         datosJson = JSON.parse(this.responseText);           
        } catch (error) {
            console.error("Error:", error.message);
        }
    }
 }
+
 
 
 function objetoXHR() {
@@ -64,28 +66,21 @@ function objetoXHR() {
 <select id="listaFamilias"> tantas <option> como registros tenga la tabla familias.
 Cada <option> guarda el id de la familia, el nombre y la foto. */
 
-function options(datos){
+function options(datos) {
+   console.log(datos);
+   $('#listaFamilias').empty(); 
 
-
-   console.log('Data received: ', datos);
-   $.each(datos, function (obj) {
-      var leng = obj.length;
-  
-      for (let a = 0; a < leng; a++) {
-         $('#listaFamilias').append(obj[a].nombre + "<option>" + "</option>");
-
+   $.each(datos, function (index, obj) {
+      
          var nuevoOption = $('<option>', {
-            value: obj[a].nombre, 
-            text: obj[a].nombre
-         });
-         $('#listaFamilias').append(nuevoOption);
-
-      }
+            id: obj.id,
+            value: obj.foto,
+            text: obj.nombre
+      });
+      $('#listaFamilias').append(nuevoOption);
    });
-
-   $('#listaFamilias')
-
 }
+
 
 
 /* Programar una función para el evento change de la <select>
@@ -93,6 +88,11 @@ que visualice en la etiqueta <input type="text" id="familiaSeleccionada" />
 el nombre de la familia y la etiqueta <img src="" id="imagenFamilia" alt="Imagen Familia" />
 la imagen, foto, de la familia seleccionada. */
 
+function changeSelect(){
+
+
+
+}
 
 
 /* Crear un evento que al hacer click en el botón,
