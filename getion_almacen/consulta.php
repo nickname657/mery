@@ -1,22 +1,20 @@
 <?php
 
+    require_once ("connectBD.php");
+    $cb = new conexion();
 
-// Verificar si se ha recibido la solicitud POST
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Verificar si se han recibido datos
-    if (isset($_POST["parametro"])) {
-        $parametro = $_POST["parametro"];
-        
-        require_once("connectBD.php");
-        $cb = new conexion();
-        $stmt = $cb->conect->prepare("SELECT * FROM familias WHERE columna = :parametro");
-        $stmt->bindParam(':parametro', $parametro);
-        $stmt->execute();
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($data);
-    } else {
-        echo json_encode(array("error" => "No se recibieron datos adecuados"));
+    $stmt = $cb->conect->prepare("SELECT * FROM familias");
+
+    $stmt->execute();
+
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $lista = [];
+    foreach ($data as $value) {
+        $encodeImg = base64_encode($value['foto']);
+        $value['foto'] = $encodeImg;
+        $lista[] = $value;
     }
-} else {
-    echo json_encode(array("error" => "Se esperaba una solicitud POST"));
-}
+
+    echo json_encode($lista);
+?>

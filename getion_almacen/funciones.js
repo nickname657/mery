@@ -6,7 +6,8 @@ $(document).ready(function () {
 
 
 function initEvent() {
-   $('#leerProductos').click(iniciar)
+   iniciar();
+   $('#leerProductos').click(options)
 }
 
 /* Crear una función en la cual una conexión asíncrona obtenga los datos de 
@@ -16,17 +17,16 @@ la tabla familia de la base de datos. */
 function iniciar() {
 
    miXHR = new objetoXHR();
-   cargarAsync("nombre=Laura&apellidos=Folgado");
+   cargarAsync("consulta.php");
 }
 
 
 function cargarAsync(url) {
    if (miXHR) {
-       miXHR.open('POST', "consulta.php", true);
+       miXHR.open('POST', url, true);
        miXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
        miXHR.onreadystatechange = estadoPeticion;
-       var datos = "nombre";
-       miXHR.send(datos);
+       miXHR.send();
    }
 }
 
@@ -64,6 +64,28 @@ function objetoXHR() {
 <select id="listaFamilias"> tantas <option> como registros tenga la tabla familias.
 Cada <option> guarda el id de la familia, el nombre y la foto. */
 
+function options(datos){
+
+
+   console.log('Data received: ', datos);
+   $.each(datos, function (obj) {
+      var leng = obj.length;
+  
+      for (let a = 0; a < leng; a++) {
+         $('#listaFamilias').append(obj[a].nombre + "<option>" + "</option>");
+
+         var nuevoOption = $('<option>', {
+            value: obj[a].nombre, 
+            text: obj[a].nombre
+         });
+         $('#listaFamilias').append(nuevoOption);
+
+      }
+   });
+
+   $('#listaFamilias')
+
+}
 
 
 /* Programar una función para el evento change de la <select>
