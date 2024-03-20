@@ -16,30 +16,32 @@ la tabla familia de la base de datos. */
 function iniciar() {
 
    miXHR = new objetoXHR();
-   cargarAsync("nombre=Laura&apellidos=Folgado");
+   cargarAsync("consulta.php");
 }
 
 
 function cargarAsync(url) {
    if (miXHR) {
-       miXHR.open('POST', "consulta.php", true);
-       miXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-       miXHR.onreadystatechange = estadoPeticion;
-       var datos = "nombre";
-       miXHR.send(datos);
+      miXHR.open('POST', url, true);
+      miXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      miXHR.onreadystatechange = estadoPeticion;
+      miXHR.send();
    }
 }
 
 
+
 function estadoPeticion() {
+ 
    if (this.readyState == 4 && this.status == 200) {
-       try {
-           var resultados = JSON.parse(this.responseText);           
-           console.log(resultados);
-           
-       } catch (error) {
-           console.error("Error:", error.message);
-       }
+   
+      try {
+         var resultados = JSON.parse(this.responseText);
+         textoDIV(document.getElementById("nose"), this.responseText); 
+
+      } catch (error) {
+         console.error("Error estado peticion:", error.message);
+      }
    }
 }
 
