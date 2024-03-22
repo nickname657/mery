@@ -14,10 +14,11 @@ function initEvent() {
    $('#listaFamilias').click(options(datosJson))
    $('#listaFamilias').change(function () {
       var opcionSeleccionada = $(this).val();
-      console.log("?????" + opcionSeleccionada);
+      console.log("opction second" + opcionSeleccionada);
       changeSelect(opcionSeleccionada, datosJson);
    });
 }
+
 
 /* Crear una función en la cual una conexión asíncrona obtenga los datos de 
 la tabla familia de la base de datos. */
@@ -75,8 +76,8 @@ function options(datos) {
       
          var nuevoOption = $('<option>', {
             id: obj.id,
-            value: obj.nombre,
-            text: obj.nombre
+            value: obj.nombreFamilia,
+            text: obj.nombreFamilia
       });
       $('#listaFamilias').append(nuevoOption);
    });
@@ -91,20 +92,23 @@ la imagen, foto, de la familia seleccionada. */
 
 function changeSelect(option , json){
 
-   console.log("que es esoooo: " + option);
+   console.log("option first: " + option);
    $('#listaFamilias').empty(); 
 
 
    var lg = json.length;
    for (let b = 0; b < lg; b++) {
-      var tag = String(json[b].nombre);
+      var tag = String(json[b].nombreFamilia);
+      console.log(tag);
       if (option === tag) {
-         $('#familiaSeleccionada').val(json[b].nombre);
+         $('#familiaSeleccionada').val(json[b].nombreFamilia);
+         var imagen64 = "data:image/jpeg;base64," + json[b].foto;
+         $('#imagenFamilia').attr('src' , imagen64);         
       } else if (option === "null") {
          $('#familiaSeleccionada').empty();
       }
    }
-
+   // 'src', "data:image/png;base64," + 
   
    $.each(json, function (index, o) {
       

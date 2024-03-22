@@ -25,7 +25,7 @@ article {
 }
 
 .header2 img{
-    display: none;
+    display: block;
     width: 40%;
     height: 40%;
     padding-top: 1em;
