@@ -18,21 +18,20 @@ function initEvent() {
 
 
    $('#leerProductos').click(function () {
-      console.log("entro aquiss");
       if (idFamilia === null) {
-         console.log("???");
+         console.log("click leer productos if = null-------");
          alert("Seleccione una familia");
       } else if (idFamilia !== null) {
-         console.log("heloooo");
+         console.log("id familia distinto de null-----");
          articulosSelec("id=" + idFamilia);
-         lfar(datosJson);
+         imprimirArticulo(datosJson);
       }
    });
 
 
    $('#listaFamilias').change(function () {
       var opcionSeleccionada = $(this).val();
-      console.log("opction second" + opcionSeleccionada);
+      console.log("opcion seleccionada click listafamilias-------" + opcionSeleccionada);
       changeSelect(opcionSeleccionada, datosJson);
    });
 }
@@ -111,14 +110,14 @@ la imagen, foto, de la familia seleccionada. */
 
 function changeSelect(option, json) {
 
-   console.log("option first: " + option);
+   console.log("Opcion seleccionada----------: " + option);
    $('#listaFamilias').empty();
 
 
    var lg = json.length;
    for (let b = 0; b < lg; b++) {
       var tag = String(json[b].nombreFamilia);
-      console.log(tag);
+      console.log('Nombre de la familia:------' + tag);
       if (option === tag) {
          idFamilia = String(json[b].nombreFamilia);
          $('#familiaSeleccionada').val(json[b].nombreFamilia);
@@ -158,6 +157,42 @@ crear el código html necesario para que se visualicen en la etiqueta html
 cuyo stock sea mayor que el stock mínimo. */
 
 
+function imprimirArticulo(json) {
+
+   $('#listaArticulos').empty();
+
+   $.each(json, function (index, a) {
+
+      var divlista = $('<div>');
+      divlista.addClass('header5');
+      $('#listaArticulos').append(divlista);
+
+      var newdiv1 = $('<div>');
+      newdiv1.addClass('desc');
+      newdiv1.text(a.idfamilia);
+      $('div.header5').append(newdiv1);
+
+      var newdiv2 = $('<div>');
+      newdiv2.addClass('desc');
+      newdiv2.text(a.descripcion);
+      $('div.header5').append(newdiv2);
+
+
+   });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 function lfar(dson) {
 
    $('#listaArticulos').empty();
@@ -174,35 +209,56 @@ function lfar(dson) {
       var t07 = String(dson[b].foto);
       var ti64 = "data:image/jpeg;base64," + t07;
 
-      console.log("?????????????" + t01);
+      console.log("ID articulo:" + t01);
       if (t05 > t06) {
 
+         var divlista = $('<div>');
+         divlista.addClass('header5');
+         $('#listaArticulos').append(divlista);
 
-         for (let cont = 1; cont < 8; cont++) {
+         var newdiv1 = $('<div>');
+         newdiv1.addClass('desc');
+         newdiv1.text(t01);
+         $('div.header5').append(newdiv1);
 
-            var newdiv = $('<div>');
-            newdiv.addClass('desc');
-            newdiv.text(t01);
-            $('#listaArticulos').append(newdiv);
-             
-            var newdiv = $('<div>');
-            newdiv.addClass('desc');
-            newdiv.text(t02);
-            $('#listaArticulos').append(newdiv);
+         var newdiv2 = $('<div>');
+         newdiv2.addClass('desc');
+         newdiv2.text(t02);
+         $('div.header5').append(newdiv2);
 
-            var newdiv = $('<div>');
-            newdiv.addClass('desc');
-            newdiv.text(t03);
-            $('#listaArticulos').append(newdiv);
+         var newdiv3 = $('<div>');
+         newdiv3.addClass('desc');
+         newdiv3.text(t03);
+         $('div.header5').append(newdiv3);
 
-            var newdiv = $('<div>');
-            newdiv.addClass('desc');
-            newdiv.text(t04);
-            $('#listaArticulos').append(newdiv);
-            
-         }
-      
-         
+         var newdiv4 = $('<div>');
+         newdiv4.addClass('desc');
+         newdiv4.text(t04);
+         $('div.header5').append(newdiv4);
+
+         var newdiv5 = $('<div>');
+         newdiv5.addClass('desc');
+         newdiv5.text(t05);
+         $('div.header5').append(newdiv5);
+
+         var newdiv6 = $('<div>');
+         newdiv6.addClass('desc');
+         newdiv6.text(t06);
+         $('div.header5').append(newdiv6);
+
+         var newdiv7 = $('<div>');
+         newdiv7.addClass('desc');
+         newdiv7.text(ti64);
+         $('div.header5').append(newdiv7);
+
+         var newimg = $('<img>');
+         newimg.attr('src', ti64);
+         newimg.addClass('imgArticle');
+         $('div.header5').append(newimg);
+
+
+
+
          // divnum = $('<div class="desc">' + t01 + '</div>');
          // // $('#imagenFamilia').attr('src', ti64);
          // $('#listaArticulos').append(divnum);

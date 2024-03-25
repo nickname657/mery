@@ -69,8 +69,20 @@ article {
     font-weight: bold;
     width: 25%;
 }
+.header5 {
+    display: flex;
+    background-color: white;
+    padding: 1em;
+    font-size: 0.8em;
+    text-align: left;
+}
 
-.header4 img{
+.header5 .desc {
+    font-weight: bold;
+    width: 25%;
+}
+
+.header5 img{
     width: 40px;
     height: 40px;
     margin:auto;
