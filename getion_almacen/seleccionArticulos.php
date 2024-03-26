@@ -4,7 +4,7 @@ $ca = new conexion();
 
 
 if (isset($_POST['id'])) {
-    $idi = '1';
+    $idi = $_POST['id'];
 
 
     $stmt = $ca->conect->prepare("SELECT * FROM articulos WHERE idFamilia=" . $idi);

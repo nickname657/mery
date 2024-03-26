@@ -1,22 +1,69 @@
-﻿
+﻿/* Programar una función desde la que se ejecuten los procesos necesarios
+después de cargar la página html en memoria. */
+
+/* Crear una función en la cual una conexión asíncrona obtenga los datos de 
+la tabla familia de la base de datos. */
+
+/* Con los datos obtenidos en formato JSON añadir a la etiqueta
+<select id="listaFamilias"> tantas <option> como registros tenga la tabla familias.
+Cada <option> guarda el id de la familia, el nombre y la foto. */
+
+
+/* Programar una función para el evento change de la <select>
+que visualice en la etiqueta <input type="text" id="familiaSeleccionada" />
+el nombre de la familia y la etiqueta <img src="" id="imagenFamilia" alt="Imagen Familia" />
+la imagen, foto, de la familia seleccionada. */
+
+
+/* Crear un evento que al hacer click en el botón,
+<input type="button" id="leerProductos" value="Leer Productos Almacén por Familia" />.
+En el evento creado programar una conexión asíncrona que ejecute el php
+seleccionArticulos.php pasandole el id de la familia seleccionada en la <select>. */
+
+
+/* Con los datos Json obtenidos por la conexión asíncrona,
+crear el código html necesario para que se visualicen en la etiqueta html
+<article id="listaArticulos" class="header4" aquellos artículos
+cuyo stock sea mayor que el stock mínimo. */
+
+
 let datosJson;
 let idFamilia;
+let dataArticle;
 
-/* Programar una función desde la que se ejecuten los procesos necesarios
-después de cargar la página html en memoria. */
+function initEvent() {
+
+   miXHR = new objetoXHR();
+   cargarAsync("consulta.php");
+   console.log(datosJson);
+}
+
+
+
 $(document).ready(function () {
    initEvent();
 });
 
 
-function initEvent() {
-   miXHR = new objetoXHR();
-   cargarAsync("consulta.php");
-   $('#listaFamilias').click(options(datosJson))
 
 
 
+function listFamilis() {
 
+   $('#listaFamilias').change(function () {
+      var opcionSeleccionada = $(this).val();
+      console.log("opcion seleccionada click listafamilias-------" + opcionSeleccionada);
+      changeSelect(opcionSeleccionada, datosJson);
+
+      $('#listaFamilias option').prop('selected', false);
+      $('#listaFamilias option[value="' + opcionSeleccionada + '"]').prop('selected', true);
+
+   });
+
+
+}
+
+function leerProducts() {
    $('#leerProductos').click(function () {
       if (idFamilia === null) {
          console.log("click leer productos if = null-------");
@@ -24,21 +71,14 @@ function initEvent() {
       } else if (idFamilia !== null) {
          console.log("id familia distinto de null-----");
          articulosSelec("id=" + idFamilia);
-         imprimirArticulo(datosJson);
       }
-   });
-
-
-   $('#listaFamilias').change(function () {
-      var opcionSeleccionada = $(this).val();
-      console.log("opcion seleccionada click listafamilias-------" + opcionSeleccionada);
-      changeSelect(opcionSeleccionada, datosJson);
    });
 }
 
 
-/* Crear una función en la cual una conexión asíncrona obtenga los datos de 
-la tabla familia de la base de datos. */
+
+
+
 
 
 
@@ -53,17 +93,6 @@ function cargarAsync(url) {
 
 
 
-function estadoPeticion() {
-
-   if (this.readyState == 4 && this.status == 200) {
-      try {
-         datosJson = JSON.parse(this.responseText);
-         console.log(datosJson);
-      } catch (error) {
-         console.error("Error:", error.message);
-      }
-   }
-}
 
 
 
@@ -83,13 +112,28 @@ function objetoXHR() {
 }
 
 
-/* Con los datos obtenidos en formato JSON añadir a la etiqueta
-<select id="listaFamilias"> tantas <option> como registros tenga la tabla familias.
-Cada <option> guarda el id de la familia, el nombre y la foto. */
+
+
+function estadoPeticion() {
+
+   if (this.readyState == 4 && this.status == 200) {
+      try {
+         datosJson = JSON.parse(this.responseText);
+         console.log("------objeto json-----");
+         console.log(datosJson);
+         console.log("------objeto json-----");
+         options(datosJson);
+      } catch (error) {
+         console.error("Error:", error.message);
+      }
+   }
+}
+
+
+
 
 function options(datos) {
    $('#listaFamilias').empty();
-
    $.each(datos, function (index, obj) {
 
       var nuevoOption = $('<option>', {
@@ -97,29 +141,23 @@ function options(datos) {
          value: obj.nombreFamilia,
          text: obj.nombreFamilia
       });
+      nuevoOption.prop('selected', true);
       $('#listaFamilias').append(nuevoOption);
    });
 }
 
 
 
-/* Programar una función para el evento change de la <select>
-que visualice en la etiqueta <input type="text" id="familiaSeleccionada" />
-el nombre de la familia y la etiqueta <img src="" id="imagenFamilia" alt="Imagen Familia" />
-la imagen, foto, de la familia seleccionada. */
+
 
 function changeSelect(option, json) {
-
-   console.log("Opcion seleccionada----------: " + option);
-   $('#listaFamilias').empty();
-
 
    var lg = json.length;
    for (let b = 0; b < lg; b++) {
       var tag = String(json[b].nombreFamilia);
-      console.log('Nombre de la familia:------' + tag);
       if (option === tag) {
-         idFamilia = String(json[b].nombreFamilia);
+         idFamilia = json[b].id;
+         console.log("id de la familia-----------:"  + idFamilia);
          $('#familiaSeleccionada').val(json[b].nombreFamilia);
          var imagen64 = "data:image/jpeg;base64," + json[b].foto;
          $('#imagenFamilia').attr('src', imagen64);
@@ -136,29 +174,38 @@ function changeSelect(option, json) {
 }
 
 
-/* Crear un evento que al hacer click en el botón,
-<input type="button" id="leerProductos" value="Leer Productos Almacén por Familia" />.
-En el evento creado programar una conexión asíncrona que ejecute el php
-seleccionArticulos.php pasandole el id de la familia seleccionada en la <select>. */
-
 
 function articulosSelec(b) {
    if (miXHR) {
       miXHR.open('POST', 'seleccionArticulos.php', true);
       miXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      miXHR.onreadystatechange = estadoPeticion;
+      miXHR.onreadystatechange = estadoPeticionArticulos;
       miXHR.send(b);
    }
 }
 
-/* Con los datos Json obtenidos por la conexión asíncrona,
-crear el código html necesario para que se visualicen en la etiqueta html
-<article id="listaArticulos" class="header4" aquellos artículos
-cuyo stock sea mayor que el stock mínimo. */
+
+function estadoPeticionArticulos() {
+
+   if (this.readyState == 4 && this.status == 200) {
+      try {
+         dataArticle = JSON.parse(this.responseText);
+         console.log("------objeto json-----");
+         console.log(dataArticle);
+         console.log("------objeto json-----");
+         imprimirArticulo(dataArticle);
+
+      } catch (error) {
+         console.error("Error:", error.message);
+      }
+   }
+}
+
 
 
 function imprimirArticulo(json) {
 
+   console.log("holow");
    $('#listaArticulos').empty();
 
    $.each(json, function (index, a) {
