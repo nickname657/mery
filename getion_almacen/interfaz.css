@@ -65,10 +65,6 @@ article {
     background-color: whitesmoke !important;
 }
 
-.header4 .desc {
-    font-weight: bold;
-    width: 25%;
-}
 .header5 {
     display: flex;
     background-color: white;
@@ -79,7 +75,7 @@ article {
 
 .header5 .desc {
     font-weight: bold;
-    width: 25%;
+    width: 12.5%;
 }
 
 .header5 img{

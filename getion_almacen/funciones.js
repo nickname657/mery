@@ -28,53 +28,133 @@ cuyo stock sea mayor que el stock mínimo. */
 
 
 let datosJson;
-let idFamilia;
+let idFamilia = 0;
 let dataArticle;
 
 function initEvent() {
-
    miXHR = new objetoXHR();
    cargarAsync("consulta.php");
    console.log(datosJson);
 }
 
-
-
 $(document).ready(function () {
    initEvent();
 });
 
+$('#listaFamilias').change(function () {
+   $('#listaArticulos').empty();
+   var opcionSeleccionada = $(this).val();
+   console.log("opcion seleccionada click listafamilias-------" + opcionSeleccionada);
+   changeSelect(opcionSeleccionada, datosJson);
 
+   $('#listaFamilias option').prop('selected', false);
+   $('#listaFamilias option[value="' + opcionSeleccionada + '"]').prop('selected', true);
 
+});
 
-
-function listFamilis() {
-
-   $('#listaFamilias').change(function () {
-      var opcionSeleccionada = $(this).val();
-      console.log("opcion seleccionada click listafamilias-------" + opcionSeleccionada);
-      changeSelect(opcionSeleccionada, datosJson);
-
-      $('#listaFamilias option').prop('selected', false);
-      $('#listaFamilias option[value="' + opcionSeleccionada + '"]').prop('selected', true);
-
-   });
-
-
-}
-
-function leerProducts() {
-   $('#leerProductos').click(function () {
-      if (idFamilia === null) {
-         console.log("click leer productos if = null-------");
-         alert("Seleccione una familia");
-      } else if (idFamilia !== null) {
-         console.log("id familia distinto de null-----");
-         articulosSelec("id=" + idFamilia);
+function changeSelect(option, json) {
+   var lg = json.length;
+   for (let b = 0; b < lg; b++) {
+      var tag = String(json[b].nombreFamilia);
+      if (option === tag) {
+         idFamilia = json[b].id;
+         $('#familiaSeleccionada').val(json[b].nombreFamilia);
+         var imagen64 = "data:image/jpeg;base64," + json[b].foto;
+         $('#imagenFamilia').attr('src', imagen64);
+      } else if (option === "null") {
+         $('#familiaSeleccionada').empty();
       }
+   }
+   $.each(json, function (index, o) {
+      $('#familiaSeleccionada').append(o.nombre);
    });
 }
 
+$('#leerProductos').click(function () {
+   if (idFamilia === 0) {
+      alert("Seleccione una familia");
+   } else if (idFamilia !== null) {
+      articulosSelec("id=" + idFamilia);
+   }
+});
+
+
+function articulosSelec(idFamilia) {
+   if (miXHR) {
+      miXHR.open('POST', 'seleccionArticulos.php', true);
+      miXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      miXHR.onreadystatechange = estadoPeticionArticulos;
+      miXHR.send(idFamilia);
+   }
+}
+
+function estadoPeticionArticulos() {
+
+   if (this.readyState == 4 && this.status == 200) {
+      try {
+         dataArticle = JSON.parse(this.responseText);
+         imprimirArticulo(dataArticle);
+      } catch (error) {
+         console.error("Error:", error.message);
+      }
+   }
+}
+
+function imprimirArticulo(json) {
+
+   $('#listaArticulos').empty();
+
+   $.each(json, function (index, a) {
+
+      if (a.stock > a.stockMin) {
+         var image64 = "data:image/jpeg;base64," + a.foto;
+
+         var divlista = $('<div>');
+         divlista.addClass('header5');
+
+         var newdiv1 = $('<div>');
+         newdiv1.addClass('desc');
+         newdiv1.text(a.id);
+         divlista.append(newdiv1);
+
+         var newdiv2 = $('<div>');
+         newdiv2.addClass('item2');
+         newdiv2.text(a.descripcion);
+         divlista.append(newdiv2);
+
+
+         var newdiv3 = $('<div>');
+         newdiv3.addClass('desc');
+         newdiv3.text(a.precioCoste);
+         divlista.append(newdiv3);
+
+         var newdiv4 = $('<div>');
+         newdiv4.addClass('desc');
+         newdiv4.text(a.precioVenta);
+         divlista.append(newdiv4);
+
+         var newdiv5 = $('<div>');
+         newdiv5.addClass('desc');
+         newdiv5.text(a.stock);
+         divlista.append(newdiv5);
+
+         var newdiv6 = $('<div>');
+         newdiv6.addClass('desc');
+         newdiv6.text(a.stockMin);
+         divlista.append(newdiv6);
+
+         var newimg = $('<img>');
+         newimg.attr('src', image64);
+         newimg.addClass('imgArticle');
+         divlista.append(newimg);
+
+         $('#listaArticulos').append(divlista);
+      }
+
+
+   });
+
+}
 
 
 
@@ -119,9 +199,6 @@ function estadoPeticion() {
    if (this.readyState == 4 && this.status == 200) {
       try {
          datosJson = JSON.parse(this.responseText);
-         console.log("------objeto json-----");
-         console.log(datosJson);
-         console.log("------objeto json-----");
          options(datosJson);
       } catch (error) {
          console.error("Error:", error.message);
@@ -147,173 +224,4 @@ function options(datos) {
 }
 
 
-
-
-
-function changeSelect(option, json) {
-
-   var lg = json.length;
-   for (let b = 0; b < lg; b++) {
-      var tag = String(json[b].nombreFamilia);
-      if (option === tag) {
-         idFamilia = json[b].id;
-         console.log("id de la familia-----------:"  + idFamilia);
-         $('#familiaSeleccionada').val(json[b].nombreFamilia);
-         var imagen64 = "data:image/jpeg;base64," + json[b].foto;
-         $('#imagenFamilia').attr('src', imagen64);
-      } else if (option === "null") {
-         $('#familiaSeleccionada').empty();
-      }
-   }
-
-   $.each(json, function (index, o) {
-
-      $('#familiaSeleccionada').append(o.nombre);
-   });
-
-}
-
-
-
-function articulosSelec(b) {
-   if (miXHR) {
-      miXHR.open('POST', 'seleccionArticulos.php', true);
-      miXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      miXHR.onreadystatechange = estadoPeticionArticulos;
-      miXHR.send(b);
-   }
-}
-
-
-function estadoPeticionArticulos() {
-
-   if (this.readyState == 4 && this.status == 200) {
-      try {
-         dataArticle = JSON.parse(this.responseText);
-         console.log("------objeto json-----");
-         console.log(dataArticle);
-         console.log("------objeto json-----");
-         imprimirArticulo(dataArticle);
-
-      } catch (error) {
-         console.error("Error:", error.message);
-      }
-   }
-}
-
-
-
-function imprimirArticulo(json) {
-
-   console.log("holow");
-   $('#listaArticulos').empty();
-
-   $.each(json, function (index, a) {
-
-      var divlista = $('<div>');
-      divlista.addClass('header5');
-      $('#listaArticulos').append(divlista);
-
-      var newdiv1 = $('<div>');
-      newdiv1.addClass('desc');
-      newdiv1.text(a.idfamilia);
-      $('div.header5').append(newdiv1);
-
-      var newdiv2 = $('<div>');
-      newdiv2.addClass('desc');
-      newdiv2.text(a.descripcion);
-      $('div.header5').append(newdiv2);
-
-
-   });
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-function lfar(dson) {
-
-   $('#listaArticulos').empty();
-
-
-   var lg = dson.length;
-   for (let b = 0; b < lg; b++) {
-      var t01 = dson[b].id;
-      var t02 = String(dson[b].descripcion);
-      var t03 = dson[b].precioCoste;
-      var t04 = dson[b].precioVenta;
-      var t05 = dson[b].stock;
-      var t06 = dson[b].stockMin;
-      var t07 = String(dson[b].foto);
-      var ti64 = "data:image/jpeg;base64," + t07;
-
-      console.log("ID articulo:" + t01);
-      if (t05 > t06) {
-
-         var divlista = $('<div>');
-         divlista.addClass('header5');
-         $('#listaArticulos').append(divlista);
-
-         var newdiv1 = $('<div>');
-         newdiv1.addClass('desc');
-         newdiv1.text(t01);
-         $('div.header5').append(newdiv1);
-
-         var newdiv2 = $('<div>');
-         newdiv2.addClass('desc');
-         newdiv2.text(t02);
-         $('div.header5').append(newdiv2);
-
-         var newdiv3 = $('<div>');
-         newdiv3.addClass('desc');
-         newdiv3.text(t03);
-         $('div.header5').append(newdiv3);
-
-         var newdiv4 = $('<div>');
-         newdiv4.addClass('desc');
-         newdiv4.text(t04);
-         $('div.header5').append(newdiv4);
-
-         var newdiv5 = $('<div>');
-         newdiv5.addClass('desc');
-         newdiv5.text(t05);
-         $('div.header5').append(newdiv5);
-
-         var newdiv6 = $('<div>');
-         newdiv6.addClass('desc');
-         newdiv6.text(t06);
-         $('div.header5').append(newdiv6);
-
-         var newdiv7 = $('<div>');
-         newdiv7.addClass('desc');
-         newdiv7.text(ti64);
-         $('div.header5').append(newdiv7);
-
-         var newimg = $('<img>');
-         newimg.attr('src', ti64);
-         newimg.addClass('imgArticle');
-         $('div.header5').append(newimg);
-
-
-
-
-         // divnum = $('<div class="desc">' + t01 + '</div>');
-         // // $('#imagenFamilia').attr('src', ti64);
-         // $('#listaArticulos').append(divnum);
-      }
-
-
-
-   }
-
-}
 
